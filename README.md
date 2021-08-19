@@ -1,2 +1,2 @@
 # methane_hotspot_detection
-Methane hotspost detection over North and South America using modeled satellite data.
+Methane hotspot detection over North and South America using modeled satellite data.
