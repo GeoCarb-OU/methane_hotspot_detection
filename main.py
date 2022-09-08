@@ -2,8 +2,7 @@
 
 # ALL required imports 
 from datahandle import *
+import sys
 import inputhandler
 
-
-
-createdataset.data_creation(INPATH,OUTPATH) 
+createdataset.data_creation(inputhandler.inoutpath(sys.argv)) 
