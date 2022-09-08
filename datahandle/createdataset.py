@@ -16,7 +16,7 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 from random import randint
 import random
 
-print("LIBRARY IMPORTS COMPLETED")
+#print("LIBRARY IMPORTS COMPLETED")
 ## Go through all the data 
 
 #for name in sorted(glob.glob('/ourdisk/hpc/geocarb/vishnupk/WRF/*')):
@@ -25,12 +25,19 @@ print("LIBRARY IMPORTS COMPLETED")
 #print("ABLE TO READ ALL THE DATA")
 ## Create arrays for data gathering
 
+
+def check_print():
+    print("Module has been loaded")
+
 def data_creation(INPATH = '/ourdisk/hpc/geocarb/vishnupk/WRF/*', OUTPATH = '/scratch/vishnupk/xiao_data_v4.pkl'):
     XC = []
     EM = []
     P = []
     PB = []
     PSFC = []
+
+    print(OUTPATH)
+    print(type(OUTPATH))
 
     for name in sorted(glob.glob(INPATH)): 
         print(name)#/Users/vishnu/Documents/GeoCarb/Data.nosync/GeoCarb Data
