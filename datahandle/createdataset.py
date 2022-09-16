@@ -99,5 +99,3 @@ def data_creation(INPATH = '/ourdisk/hpc/geocarb/vishnupk/WRF/*', OUTPATH = '/sc
     df.to_pickle(OUTPATH)
 
     print("COMPLETED")
-
-

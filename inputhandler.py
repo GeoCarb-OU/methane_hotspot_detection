@@ -25,3 +25,6 @@ def inoutpath(argv):
 			arg_outpath = arg
 
 	return(arg_inpath,arg_outpath)
+
+
+# analog.
