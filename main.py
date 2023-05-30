@@ -3,5 +3,10 @@
 # ALL required imports 
 from datahandle import *
 
+try:
+	createdataset.data_creation(INPATH,OUTPATH)
+	print("datafile creation succeded")
+except:
+	print("datafile creation failed") 
 
-createdataset.data_creation(INPATH,OUTPATH) 
+
