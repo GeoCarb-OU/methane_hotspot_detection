@@ -45,7 +45,7 @@ def read_data(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pk
     df = pd.read_pickle(filename)
     return df
 
-def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024):
+def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, treshold = 15):
     # Read data from pickle file 
     data = read_data(filename) 
     
@@ -53,9 +53,17 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     X = data['XC']
     y = data['EM'] 
     
-    # # Convert to numpy array 
-    # X = X.astype('float32')
-    # y = y.astype('float32')
+    X = X.to_list()
+    X = np.ma.getdata(X)
+    X = X[:,0,:,:]
+    
+    y = y.to_list()
+    y = np.array(y)
+    y = np.where(y > treshold, 1, 0) 
+    
+    # # Convert to float32  
+    X = X.astype('float32')
+    y = y.astype('float32')
     
     #Split the data into train and test 
     x_train , x_rem, y_train, y_rem = train_test_split(X, y, test_size = test_size*2, random_state = random_state) 

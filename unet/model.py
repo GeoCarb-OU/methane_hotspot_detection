@@ -37,7 +37,7 @@ def create_unet_network(
   model1 = Sequential()
 
   # Add input layer 
-  model1.add(InputLayer(input_shape=(256,256,26)))
+  model1.add(InputLayer(input_shape=input_shape, name = 'input_layer'))
 
   # Add downsampling layers to the autoencoder 
   # Add convolutional layers to the autoencoder

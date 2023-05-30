@@ -326,15 +326,15 @@ def execute_exp(args=None, multi_gpus=False):
 
     # Create the model
 
-    model = create_autoencoder_network(
-                                        input_shape=args.input_shape,
+    model = create_unet_network(
+                                        input_shape= (265, 442),
                                         n_filters=args.n_filters,
                                         kernelSize=args.kernel_size,
                                         pool_size=args.pool_size,
                                         spatial_dropout=args.spatial_dropout,
                                         padding=args.padding,
                                         activation_convolution=args.activation_conv,
-                                        num_outputs=num_classes,
+                                        num_outputs=2,
                                         lrate=args.lrate,
                                         kernel=kernel,
                                         )
