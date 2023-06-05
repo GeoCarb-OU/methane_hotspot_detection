@@ -38,21 +38,22 @@ def get_data():
     
     return df
 
-def read_data(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl'):
+def read_pkl(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl'):
     if filename is None:
         filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl'
         
     df = pd.read_pickle(filename)
     return df
 
-def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, treshold = 15):
+def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, treshold = 15, save_dataset = False):
     # Read data from pickle file 
-    data = read_data(filename) 
+    data = read_pkl(filename) 
     
     # Load the data into X and y 
     X = data['XC']
     y = data['EM'] 
     
+    # Preprocessing steps 
     X = X.to_list()
     X = np.ma.getdata(X)
     X = X[:,0,:,:]
@@ -79,5 +80,12 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
      
     test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
     test_dataset = test_dataset.shuffle(buffer_size=buffer_size).batch(batch_size)
+    
+    if save_dataset == True: 
+        train_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/train.tfrecords")
+        validation_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/validation.tfrecords")
+        test_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/test.tfrecords")  
+        
+
 
     return train_dataset, validation_dataset, test_dataset 
