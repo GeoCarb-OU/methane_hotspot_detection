@@ -127,7 +127,7 @@ def exp_type_to_hyperparameters(args):
     '''
     if args.exp_type is None:
         # ADD MORE ARGUMENTS TO TEST DIFFERENT CONFIG OPTIONS
-        p = {'rotation': range(5)}
+        p = {'rotation': range(1)}
     else:
         assert False, "Unrecognized exp_type"
 
@@ -329,12 +329,12 @@ def execute_exp(args=None, multi_gpus=False):
     model = create_unet_network(
                                         input_shape= (265, 442),
                                         n_filters=args.n_filters,
-                                        kernelSize=args.kernel_size,
+                                        kernelSize=args.kernelSize,
                                         pool_size=args.pool_size,
                                         spatial_dropout=args.spatial_dropout,
                                         padding=args.padding,
-                                        activation_convolution=args.activation_conv,
-                                        num_outputs=2,
+                                        activation_convolution=args.activation_convolution,
+                                        output_shape = (265,442),
                                         lrate=args.lrate,
                                         kernel=kernel,
                                         )

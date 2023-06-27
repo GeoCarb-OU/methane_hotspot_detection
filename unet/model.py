@@ -39,8 +39,8 @@ def create_unet_network(
   # Add input layer 
   model1.add(InputLayer(input_shape=input_shape, name = 'input_layer'))
 
-  # Add downsampling layers to the autoencoder 
-  # Add convolutional layers to the autoencoder
+  # Add downsampling layers to the Unet 
+  # Add convolutional layers to the Unet
   # SpatialDropout if exists and maxpooling layers if pool_size > 1
   for i,n in enumerate(n_filters): 
 
