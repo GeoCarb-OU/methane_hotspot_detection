@@ -51,33 +51,34 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     
     # Load the data into X and y 
     X = data['XC']
-    y = data['EM'] 
+    Y = data['EM'] 
     
     # Preprocessing steps 
     X = X.to_list()
     X = np.ma.getdata(X)
     X = X[:,0,:,:]
     
-    y = y.to_list()
-    y = np.array(y)
-    y = np.where(y > treshold, 1, 0) 
+    Y = Y.to_list()
+    Y = np.array(Y)
+    Y = np.where(Y > treshold, 1, 0) 
     
     # # Convert to float32  
     X = X.astype('float32')
-    y = y.astype('float32')
+    Y = Y.astype('float32')
     
     # Resize to make it 256,256 (2^x)
     X_resized = []
-    for x in X:
+    Y_resized = []
+    for x,y in zip(X,Y):
         X_resized.append(np.resize(x, (256,256)))
-    
+        Y_resized.append(np.resize(Y, (256,256)))
     
     # Build a history of 5 prior days: 
     X_new = []
     for i in range(5, len(X_resized)):
         X_new.append(np.array(X_resized[i-5:i]))
 
-    y_new = y[5:len(y)]
+    y_new = Y[5:len(Y)]
     
     # Split data 
     # test_size = 0.2

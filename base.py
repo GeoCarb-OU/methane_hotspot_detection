@@ -324,7 +324,7 @@ def execute_exp(args=None, multi_gpus=False):
     # print(shape)
     
     for element in ds_train:
-        print(element)
+        # print(element)
         break
     
     print('Data Loaded')
@@ -336,14 +336,14 @@ def execute_exp(args=None, multi_gpus=False):
     # Create the model
     
     model = create_unet_network(
-                                        input_shape= (265, 442, 1),
+                                        input_shape = (5,256,256),
                                         n_filters=args.n_filters,
                                         kernelSize=args.kernelSize,
                                         pool_size=args.pool_size,
                                         spatial_dropout=args.spatial_dropout,
                                         padding=args.padding,
                                         activation_convolution=args.activation_convolution,
-                                        output_shape = (265,442),
+                                        output_shape = (256,256),
                                         lrate=args.lrate,
                                         kernel=kernel,
                                         )

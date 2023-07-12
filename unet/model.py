@@ -69,7 +69,6 @@ def create_unet_network(
   # Output layer 
   model1.add(Conv2D(1 , (1,1), padding = 'same', activation = 'sigmoid', name = 'output_layer'))
   
-  model1.add(Reshape(output_shape))
   # optimizer
   opt = tf.keras.optimizers.Adam(learning_rate=lrate)
 
