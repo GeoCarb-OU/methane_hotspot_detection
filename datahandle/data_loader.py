@@ -66,21 +66,58 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     X = X.astype('float32')
     y = y.astype('float32')
     
-    #Split the data into train and test 
-    x_train , x_rem, y_train, y_rem = train_test_split(X, y, test_size = test_size*2, random_state = random_state) 
+    # Resize to make it 256,256 (2^x)
+    X_resized = []
+    for x in X:
+        X_resized.append(np.resize(x, (256,256)))
     
-    x_test , x_val, y_test, y_val = train_test_split(x_rem, y_rem, test_size = 0.5, random_state = random_state)
+    
+    # Build a history of 5 prior days: 
+    X_new = []
+    for i in range(5, len(X_resized)):
+        X_new.append(np.array(X_resized[i-5:i]))
+
+    y_new = y[5:len(y)]
+    
+    # Split data 
+    # test_size = 0.2
+    test_split = int(len(X)*test_size)
+    
+    # #Split the data into train and test 
+    # x_train , x_rem, y_train, y_rem = train_test_split(X, y, test_size = test_size*2, random_state = random_state) 
+    # x_test , x_val, y_test, y_val = train_test_split(x_rem, y_rem, test_size = 0.5, random_state = random_state)
+    
+    # # Expand doimensions of the data    
+    
+    # x_train = np.expand_dims(x_train, axis = -1)
+    # x_val = np.expand_dims(x_val, axis = -1)
+    # x_test = np.expand_dims(x_test, axis = -1)
+    
+    
+    # Autocorrelation the data (Split change)
+    x_train = X_new[:-(2*test_split)]
+    y_train = y_new[:-(2*test_split)]
+    
+    x_val = X_new[-(2*test_split):-(test_split)]
+    y_val = y_new[-(2*test_split):-(test_split)]
+    
+    x_test = X_new[-(test_split):]
+    y_test = y_new[-(test_split):]
     
     #Create tensorflow dataset with buffer size 1024 and batch size 8 
     train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
-    train_dataset = train_dataset.shuffle(buffer_size=buffer_size).batch(batch_size)
+    #train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+    train_dataset = train_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
     
     validation_dataset = tf.data.Dataset.from_tensor_slices((x_val, y_val))
-    validation_dataset = validation_dataset.shuffle(buffer_size=buffer_size).batch(batch_size)
+    #validation_dataset = validation_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+    validation_dataset = validation_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
      
     test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
-    test_dataset = test_dataset.shuffle(buffer_size=buffer_size).batch(batch_size)
+    #test_dataset = test_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+    test_dataset = test_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
     
+    # Add caching and save TF records by folds
     if save_dataset == True: 
         train_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/train.tfrecords")
         validation_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/validation.tfrecords")
@@ -88,4 +125,8 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
         
 
 
+    # train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+    # validation_dataset = validation_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+    # test_dataset = test_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+    
     return train_dataset, validation_dataset, test_dataset 

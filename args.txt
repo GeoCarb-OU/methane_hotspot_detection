@@ -20,6 +20,6 @@
 2
 2
 --patience=10
---steps=100
+--steps_per_epoch=100
 --epochs=1000
 --batch_size=16

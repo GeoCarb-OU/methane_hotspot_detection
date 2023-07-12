@@ -17,6 +17,7 @@ import py3nvml
 
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
+from tensorflow import keras
 from tensorflow.keras.utils import plot_model
 from job_control import *
 
@@ -194,9 +195,9 @@ def generate_fname(args, params_str):
     hidden_str = '_'.join(str(x) for x in args.hidden)
     
     # Conv configuration
-    conv_size_str = '_'.join(str(x) for x in args.conv_size)
-    conv_filter_str = '_'.join(str(x) for x in args.conv_nfilters)
-    pool_str = '_'.join(str(x) for x in args.pool)
+    #conv_size_str = '_'.join(str(x) for x in args.conv_size)
+    conv_filter_str = '_'.join(str(x) for x in args.n_filters)
+    #pool_str = '_'.join(str(x) for x in args.pool)
     
     # Dropout
     if args.dropout is None:
@@ -239,12 +240,12 @@ def generate_fname(args, params_str):
     lrate_str = "LR_%0.6f_"%args.lrate
     
     # Put it all together, including #of training folds and the experiment rotation
-    return "%s/image_%s%sCsize_%s_Cfilters_%s_Pool_%s_Pad_%s_hidden_%s_%s%s%s%s%sntrain_%02d_rot_%02d"%(args.results_path,
+    return "%s/image_%s%s_Cfilters_%s_Pool_%s_Pad_%s_hidden_%s_%s%s%s%s%sntrain_%02d_rot_%02d"%(args.results_path,
                                                                                            experiment_type_str,
                                                                                            label_str,
-                                                                                           conv_size_str,
+                                                                                           #conv_size_str,
                                                                                            conv_filter_str,
-                                                                                           pool_str,
+                                                                                           #pool_str,
                                                                                            args.padding,
                                                                                            hidden_str, 
                                                                                            dropout_str,
@@ -318,6 +319,14 @@ def execute_exp(args=None, multi_gpus=False):
                                     test_size = 0.2
                                     )
     
+    # dataset_to_numpy = list(ds_train.as_numpy_iterator())
+    # shape = tf.shape(dataset_to_numpy)
+    # print(shape)
+    
+    for element in ds_train:
+        print(element)
+        break
+    
     print('Data Loaded')
     
     ####################################################
@@ -325,9 +334,9 @@ def execute_exp(args=None, multi_gpus=False):
     kernel = build_regularization_kernel(args.L1_regularization, args.L2_regularization)
 
     # Create the model
-
+    
     model = create_unet_network(
-                                        input_shape= (265, 442),
+                                        input_shape= (265, 442, 1),
                                         n_filters=args.n_filters,
                                         kernelSize=args.kernelSize,
                                         pool_size=args.pool_size,
@@ -347,7 +356,8 @@ def execute_exp(args=None, multi_gpus=False):
     print(args)
 
     # Output file base and pkl file
-    fbase = generate_fname(args, args_str)
+    #fbase = generate_fname(args, args_str)
+    fbase = 'unet_initial'
     fname_out = "%s_results.pkl"%fbase
 
     # Plot the model
@@ -376,7 +386,7 @@ def execute_exp(args=None, multi_gpus=False):
     #  validation_steps=None means that ALL validation samples will be used
     history = model.fit(ds_train,
                         epochs=args.epochs,
-                        steps_per_epoch=args.steps,
+                        steps_per_epoch=args.steps_per_epoch,
                         use_multiprocessing=True, 
                         verbose=args.verbose>=2,
                         validation_data=ds_valid,

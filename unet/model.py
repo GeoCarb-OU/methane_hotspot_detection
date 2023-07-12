@@ -16,13 +16,13 @@ from keras.layers import UpSampling2D
 from keras.layers import SpatialDropout2D
 from keras.layers import InputLayer
 from keras import Input
-from keras.layers import Concatenate
+from keras.layers import Concatenate, Reshape
 from keras import Model
 from keras.models import Sequential
 
 
 def create_unet_network(
-    input_shape = (256, 256, 8),
+    input_shape,
     n_filters = [10,5],
     kernelSize = [3,3],
     pool_size = [2,2,2],
@@ -33,6 +33,7 @@ def create_unet_network(
     output_shape = 7,
     kernel = None,
 ):
+  
 # Build a sequential model 
   model1 = Sequential()
 
@@ -50,9 +51,9 @@ def create_unet_network(
       model1.add(SpatialDropout2D(spatial_dropout, name = 'spatial_drop_{}'.format(i)))
     
     if pool_size[i] > 1: 
-      model1.add(MaxPool2D(pool_size = (pool_size[i], pool_size[i]), name = 'MaxPool_down_{}'.format(i) ))
+      model1.add(MaxPooling2D(pool_size = (pool_size[i], pool_size[i]),padding = padding,  name = 'MaxPool_down_{}'.format(i) ))
 
-
+  # TODO : zip filters and poolsizes and kernel sizes
   # Upsampling layers 
 
   for i,n in reversed(list(enumerate(n_filters))):
@@ -66,8 +67,9 @@ def create_unet_network(
       model1.add(UpSampling2D(size = (pool_size[(len(pool_size) - (i+1))], pool_size[(len(pool_size) - (i+1))]), interpolation = 'nearest', name ='UpSampling_{}'.format(i)))
 
   # Output layer 
-  model1.add(Conv2D(7, (1,1), padding = 'same', activation = 'softmax'))
-      
+  model1.add(Conv2D(1 , (1,1), padding = 'same', activation = 'sigmoid', name = 'output_layer'))
+  
+  model1.add(Reshape(output_shape))
   # optimizer
   opt = tf.keras.optimizers.Adam(learning_rate=lrate)
 
@@ -75,8 +77,8 @@ def create_unet_network(
   # Compile model
   model1.compile(
           optimizer=opt,
-          loss='sparse_categorical_crossentropy',
-          metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
+          loss='BinaryCrossentropy',
+          metrics=[tf.keras.metrics.Accuracy()]
                     )
 
       
