@@ -71,7 +71,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     Y_resized = []
     for x,y in zip(X,Y):
         X_resized.append(np.resize(x, (256,256)))
-        Y_resized.append(np.resize(Y, (256,256)))
+        Y_resized.append(np.resize(y, (256,256)))
     
     # Build a history of 5 prior days: 
     X_new = []
