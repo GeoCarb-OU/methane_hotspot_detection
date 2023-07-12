@@ -66,6 +66,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     X = X.astype('float32')
     Y = Y.astype('float32')
     
+    print('Float Conversion Completed')
     # Resize to make it 256,256 (2^x)
     X_resized = []
     Y_resized = []
@@ -73,16 +74,20 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
         X_resized.append(np.resize(x, (256,256)))
         Y_resized.append(np.resize(y, (256,256)))
     
+    print('resize completed')
+    del X, Y
+    
     # Build a history of 5 prior days: 
     X_new = []
     for i in range(5, len(X_resized)):
         X_new.append(np.array(X_resized[i-5:i]))
 
-    y_new = Y[5:len(Y)]
+    y_new = Y_resized[5:len(Y_resized)]
     
+    del X_resized, Y_resized
     # Split data 
     # test_size = 0.2
-    test_split = int(len(X)*test_size)
+    test_split = int(len(X_new)*test_size)
     
     # #Split the data into train and test 
     # x_train , x_rem, y_train, y_rem = train_test_split(X, y, test_size = test_size*2, random_state = random_state) 
@@ -105,6 +110,9 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     x_test = X_new[-(test_split):]
     y_test = y_new[-(test_split):]
     
+    print('Split Data Completed')
+    
+    print('Creating Tensorflow Dataset....')
     #Create tensorflow dataset with buffer size 1024 and batch size 8 
     train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
     #train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)

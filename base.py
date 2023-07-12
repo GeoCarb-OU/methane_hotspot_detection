@@ -327,7 +327,7 @@ def execute_exp(args=None, multi_gpus=False):
         # print(element)
         break
     
-    print('Data Loaded')
+    print('Data Pre-processing completed!')
     
     ####################################################
   
