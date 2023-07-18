@@ -4,3 +4,5 @@
 *.pkl
 results/
 wandb/
+results/*
+wandb/*

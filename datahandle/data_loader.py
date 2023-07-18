@@ -80,7 +80,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     # Build a history of 5 prior days: 
     X_new = []
     for i in range(5, len(X_resized)):
-        X_new.append(np.array(X_resized[i-5:i]).Reshape(256,256,5))
+        X_new.append(np.array(X_resized[i-5:i]).reshape(256,256,5))
 
     y_new = Y_resized[5:len(Y_resized)]
     

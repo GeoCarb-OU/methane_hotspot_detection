@@ -378,7 +378,17 @@ def execute_exp(args=None, multi_gpus=False):
             return
             
     # Callbacks
-    metrics_callback = WandbMetricsLogger()
+    WandbCallback(
+ monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
+ log_weights=(False), log_gradients=(False), save_model=(True),
+ training_data=None, validation_data=None, labels=[], predictions=36,
+ generator=None, input_type=None, output_type=None, log_evaluation=(False),
+ validation_steps=None, class_colors=None, log_batch_frequency=None,
+ log_best_prefix="best_", save_graph=(True), validation_indexes=None,
+ validation_row_processor=None, prediction_row_processor=None,
+ infer_missing_processors=(True), log_evaluation_frequency=0,
+ compute_flops=(False), **kwargs
+)
     early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience, restore_best_weights=True,
                                                       min_delta=args.min_delta, monitor=args.monitor)
 
@@ -392,7 +402,7 @@ def execute_exp(args=None, multi_gpus=False):
                         use_multiprocessing=True, 
                         verbose=args.verbose>=2,
                         validation_data=ds_valid,
-                        callbacks=[early_stopping_cb, metrics_callback])
+                        callbacks=[early_stopping_cb, WandbCallback()])
 
 
     # Save model
