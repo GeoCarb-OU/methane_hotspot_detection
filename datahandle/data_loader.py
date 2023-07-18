@@ -80,7 +80,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     # Build a history of 5 prior days: 
     X_new = []
     for i in range(5, len(X_resized)):
-        X_new.append(np.array(X_resized[i-5:i]))
+        X_new.append(np.array(X_resized[i-5:i]).Reshape(256,256,5))
 
     y_new = Y_resized[5:len(Y_resized)]
     
@@ -113,7 +113,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     print('Split Data Completed')
     
     print('Creating Tensorflow Dataset....')
-    #Create tensorflow dataset with buffer size 1024 and batch size 8 
+    #Create tensorflow dataset with buffer size 1024 and batch size of batchsize (default is 8)  
     train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
     #train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
     train_dataset = train_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)

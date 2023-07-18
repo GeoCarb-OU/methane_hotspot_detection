@@ -2,3 +2,5 @@
 .results
 .wandb
 *.pkl
+results/
+wandb/
