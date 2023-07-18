@@ -99,7 +99,7 @@ def create_parser():
     parser.add_argument('--activation_out', type=str, default='softmax', help="Activation function for output layer")
 
     # Early stopping
-    parser.add_argument('--min_delta', type=float, default=0.0, help="Minimum delta for early termination")
+    parser.add_argument('--min_delta', type=float, default=0.001, help="Minimum delta for early termination")
     parser.add_argument('--patience', type=int, default=100, help="Patience for early termination")
     parser.add_argument('--monitor', type=str, default="val_loss", help="Metric to monitor for early termination")
 
@@ -318,7 +318,8 @@ def execute_exp(args=None, multi_gpus=False):
     
     ds_train,ds_valid, ds_test = data_loader(filename=args.data_path,
                                     batch_size=args.batch,
-                                    test_size = 0.2
+                                    test_size = 0.2,
+                                    repeat = args.repeat,
                                     )
     
     # dataset_to_numpy = list(ds_train.as_numpy_iterator())

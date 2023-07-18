@@ -55,7 +55,7 @@ def read_pkl(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl
     df = pd.read_pickle(filename)
     return df
 
-def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, treshold = 15, save_dataset = False):
+def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, treshold = 15, repeat = False, save_dataset = False):
     
     
     data_exists = check_files(dataset_path = '/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/')
@@ -157,6 +157,10 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     train_dataset = train_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
     validation_dataset = validation_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
     test_dataset = test_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
+    
+    #Repeat the dataset if needed
+    if repeat:
+        train_dataset = train_dataset.repeat()
 
     # train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
     # validation_dataset = validation_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
