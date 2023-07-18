@@ -242,7 +242,7 @@ def generate_fname(args, params_str):
     lrate_str = "LR_%0.6f_"%args.lrate
     
     # Put it all together, including #of training folds and the experiment rotation
-    return "%s/image_%s%s_Cfilters_%s_Pool_%s_Pad_%s_hidden_%s_%s%s%s%s%sntrain_%02d_rot_%02d"%(args.results_path,
+    return "%s/image_%s%s_Cfilters_%s_Pool_%s_Pad_%s_hidden_%s_%s%s%s%sntrain_%02d_rot_%02d"%(args.results_path,
                                                                                            experiment_type_str,
                                                                                            label_str,
                                                                                            #conv_size_str,
@@ -379,19 +379,16 @@ def execute_exp(args=None, multi_gpus=False):
             return
             
     # Callbacks
-    WandbCallback(
- monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
- log_weights=(False), log_gradients=(False), save_model=(True),
- training_data=None, validation_data=None, labels=[], predictions=36,
- generator=None, input_type=None, output_type=None, log_evaluation=(False),
- validation_steps=None, class_colors=None, log_batch_frequency=None,
- log_best_prefix="best_", save_graph=(True), validation_indexes=None,
- validation_row_processor=None, prediction_row_processor=None,
- infer_missing_processors=(True), log_evaluation_frequency=0,
- compute_flops=(False), **kwargs
-)
-    early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience, restore_best_weights=True,
-                                                      min_delta=args.min_delta, monitor=args.monitor)
+    wandb_callback = WandbCallback( monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
+                    log_weights=(False), log_gradients=(False), save_model=(True),
+                    training_data=None, validation_data=None, labels=[], predictions=36,
+                    generator=None, input_type=None, output_type=None, log_evaluation=(False),
+                    validation_steps=None, class_colors=None, log_batch_frequency=None,
+                    log_best_prefix="best_", save_graph=(True), validation_indexes=None,
+                    validation_row_processor=None, prediction_row_processor=None,
+                    infer_missing_processors=(True), log_evaluation_frequency=0,
+                    compute_flops=(False))
+    early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience, restore_best_weights=True, min_delta = args.min_delta, monitor=args.monitor)
 
     # Learn
     #  steps_per_epoch: how many batches from the training set do we use for training in one epoch?
@@ -403,7 +400,7 @@ def execute_exp(args=None, multi_gpus=False):
                         use_multiprocessing=True, 
                         verbose=args.verbose>=2,
                         validation_data=ds_valid,
-                        callbacks=[early_stopping_cb, WandbCallback()])
+                        callbacks=[early_stopping_cb, wandb_callback])
 
 
     # Save model
@@ -417,7 +414,7 @@ def execute_exp(args=None, multi_gpus=False):
     results['predict_validation'] = model.predict(ds_valid)
     results['predict_validation_eval'] = model.evaluate(ds_valid)
     
-    if ds_testing is not None:
+    if ds_test is not None:
         results['predict_testing'] = model.predict(ds_test)
         results['predict_testing_eval'] = model.evaluate(ds_test)
         

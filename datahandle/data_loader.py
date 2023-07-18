@@ -38,10 +38,10 @@ def get_data():
     
     return df
 
-def check_files(name):
-    train_path = os.path.join(name, 'train.tfrecords')
-    validation_path = os.path.join(name, 'validation.tfrecords')
-    test_path = os.path.join(name, 'test.tfrecords')
+def check_files(dataset_path):
+    train_path = os.path.join(dataset_path, 'train.tfrecords')
+    validation_path = os.path.join(dataset_path, 'validation.tfrecords')
+    test_path = os.path.join(dataset_path, 'test.tfrecords')
     
     if os.path.exists(train_path) and os.path.exists(validation_path) and os.path.exists(test_path):
         return True
