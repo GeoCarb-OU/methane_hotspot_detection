@@ -15,6 +15,7 @@ import pickle
 import pandas as pd
 import py3nvml
 import wandb
+from wandb.keras import WandbCallback
 wandb.init(project="methane", entity="vishnupk")
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
