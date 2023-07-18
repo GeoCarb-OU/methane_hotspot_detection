@@ -1,18 +1,4 @@
-2023-06-28 14:24:22.587417: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
+2023-07-18 13:03:31.812506: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-06-28 14:24:32.136662: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
-2023-06-28 14:24:32.136789: W tensorflow/stream_executor/cuda/cuda_driver.cc:263] failed call to cuInit: UNKNOWN ERROR (303)
-Traceback (most recent call last):
-  File "/home/vishnupk/geocarb/methane_hotspot_detection/base.py", line 509, in <module>
-    execute_exp(args, multi_gpus=n_physical_devices)
-  File "/home/vishnupk/geocarb/methane_hotspot_detection/base.py", line 338, in execute_exp
-    model = create_unet_network(
-  File "/home/vishnupk/geocarb/methane_hotspot_detection/unet/model.py", line 70, in create_unet_network
-    model1.add(Conv2D(output_shape, (1,1), padding = 'same', activation = 'softmax'))
-  File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/dtensor/utils.py", line 96, in _wrap_function
-    init_method(layer_instance, *args, **kwargs)
-  File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/layers/convolutional/conv2d.py", line 178, in __init__
-    super().__init__(
-  File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/layers/convolutional/base_conv.py", line 128, in __init__
-    if filters is not None and filters <= 0:
-TypeError: '<=' not supported between instances of 'tuple' and 'int'
+2023-07-18 13:03:37.491750: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2023-07-18 13:03:37.491791: W tensorflow/stream_executor/cuda/cuda_driver.cc:263] failed call to cuInit: UNKNOWN ERROR (303)
