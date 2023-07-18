@@ -14,7 +14,8 @@ import argparse
 import pickle
 import pandas as pd
 import py3nvml
-
+import wandb
+wandb.init(project="methane", entity="vishnupk")
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
 from tensorflow import keras
@@ -336,7 +337,7 @@ def execute_exp(args=None, multi_gpus=False):
     # Create the model
     
     model = create_unet_network(
-                                        input_shape = (5,256,256),
+                                        input_shape = (256,256,5),
                                         n_filters=args.n_filters,
                                         kernelSize=args.kernelSize,
                                         pool_size=args.pool_size,
@@ -377,6 +378,7 @@ def execute_exp(args=None, multi_gpus=False):
             return
             
     # Callbacks
+    metrics_callback = WandbMetricsLogger()
     early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience, restore_best_weights=True,
                                                       min_delta=args.min_delta, monitor=args.monitor)
 
@@ -390,7 +392,7 @@ def execute_exp(args=None, multi_gpus=False):
                         use_multiprocessing=True, 
                         verbose=args.verbose>=2,
                         validation_data=ds_valid,
-                        callbacks=[early_stopping_cb])
+                        callbacks=[early_stopping_cb, metrics_callback])
 
 
     # Save model

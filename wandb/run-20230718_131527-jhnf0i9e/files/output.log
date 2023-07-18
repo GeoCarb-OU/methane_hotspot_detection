@@ -1,0 +1,37 @@
+[]
+NO GPU
+0
+Total jobs: 1
+{'rotation': 0}
+Float Conversion Completed
+resize completed
+Split Data Completed
+Creating Tensorflow Dataset....
+Data Pre-processing completed!
+(None, 256, 256, 30)
+(None, 128, 128, 60)
+(None, 64, 64, 90)
+(None, 32, 32, 120)
+Namespace(check=False, nogo=False, verbose=0, cpus_per_task=None, gpu=False, exp_type=None, label=None, image_size=[256, 256, 26], Nfolds=5, results_path='./results', data_path='/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl', exp_index=0, rotation=0, epochs=1000, Ntraining=3, batch_size=16, lrate=0.001, kernelSize=[3, 3, 3, 3], n_filters=[30, 60, 90, 120], pool_size=[2, 2, 2, 2, 2], padding='same', hidden=[100, 5], dropout=None, recurrent_dropout=None, spatial_dropout=None, L1_regularization=None, L2_regularization=None, activation_dense='elu', activation_convolution='elu', activation_out='softmax', min_delta=0.0, patience=10, monitor='val_loss', batch=10, prefetch=3, num_parallel_calls=4, cache=None, shuffle=100, generator_seed=42, repeat=True, steps_per_epoch=100, save_model=False)
+Traceback (most recent call last):
+  File "/home/vishnupk/geocarb/methane_hotspot_detection/base.py", line 510, in <module>
+  File "/home/vishnupk/geocarb/methane_hotspot_detection/base.py", line 388, in execute_exp
+    #  validation_steps=None means that ALL validation samples will be used
+  File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/tmp/__autograph_generated_fileplukrxp0.py", line 15, in tf__train_function
+    retval_ = ag__.converted_call(ag__.ld(step_function), (ag__.ld(self), ag__.ld(iterator)), None, fscope)
+ValueError: in user code:
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 1160, in train_function  *
+        return step_function(self, iterator)
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 1146, in step_function  **
+        outputs = model.distribute_strategy.run(run_step, args=(data,))
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 1135, in run_step  **
+        outputs = model.train_step(data)
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 993, in train_step
+        y_pred = self(x, training=True)
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
+        raise e.with_traceback(filtered_tb) from None
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/input_spec.py", line 295, in assert_input_compatibility
+        raise ValueError(
+    ValueError: Input 0 of layer "model" is incompatible with the layer: expected shape=(None, 256, 256, 5), found shape=(None, 5, 256, 256)

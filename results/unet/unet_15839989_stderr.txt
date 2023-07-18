@@ -1,0 +1,42 @@
+wandb: Currently logged in as: vishnupk. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.15.4
+wandb: Run data is saved locally in /home/vishnupk/geocarb/methane_hotspot_detection/wandb/run-20230718_131527-jhnf0i9e
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run different-armadillo-1
+wandb: ⭐️ View project at https://wandb.ai/vishnupk/methane
+wandb: 🚀 View run at https://wandb.ai/vishnupk/methane/runs/jhnf0i9e
+2023-07-18 13:15:30.343198: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-07-18 13:16:04.752868: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2023-07-18 13:16:04.753003: W tensorflow/stream_executor/cuda/cuda_driver.cc:263] failed call to cuInit: UNKNOWN ERROR (303)
+Traceback (most recent call last):
+  File "/home/vishnupk/geocarb/methane_hotspot_detection/base.py", line 510, in <module>
+  File "/home/vishnupk/geocarb/methane_hotspot_detection/base.py", line 388, in execute_exp
+    #  validation_steps=None means that ALL validation samples will be used
+  File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/tmp/__autograph_generated_fileplukrxp0.py", line 15, in tf__train_function
+    retval_ = ag__.converted_call(ag__.ld(step_function), (ag__.ld(self), ag__.ld(iterator)), None, fscope)
+ValueError: in user code:
+
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 1160, in train_function  *
+        return step_function(self, iterator)
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 1146, in step_function  **
+        outputs = model.distribute_strategy.run(run_step, args=(data,))
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 1135, in run_step  **
+        outputs = model.train_step(data)
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/training.py", line 993, in train_step
+        y_pred = self(x, training=True)
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
+        raise e.with_traceback(filtered_tb) from None
+    File "/home/fagg/miniconda3/envs/tf/lib/python3.10/site-packages/keras/engine/input_spec.py", line 295, in assert_input_compatibility
+        raise ValueError(
+
+    ValueError: Input 0 of layer "model" is incompatible with the layer: expected shape=(None, 256, 256, 5), found shape=(None, 5, 256, 256)
+
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: 🚀 View run different-armadillo-1 at: https://wandb.ai/vishnupk/methane/runs/jhnf0i9e
+wandb: Synced 6 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230718_131527-jhnf0i9e/logs

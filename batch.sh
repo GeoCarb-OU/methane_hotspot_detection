@@ -3,8 +3,8 @@
 #SBATCH --cpus-per-task=10
 # memory in MB
 #SBATCH --mem=15000
-#SBATCH --output=results/unet/run1_%04a_stdout.txt
-#SBATCH --error=results/unet/run1_%04a_stderr.txt
+#SBATCH --output=results/unet/unet_%j_stdout.txt
+#SBATCH --error=results/unet/unet_%j_stderr.txt
 #SBATCH --time=05:00:00
 #SBATCH --job-name=unet_deep
 #SBATCH --mail-user=vishnupk@ou.edu

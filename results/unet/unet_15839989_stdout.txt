@@ -1,0 +1,15 @@
+[]
+NO GPU
+0
+Total jobs: 1
+{'rotation': 0}
+Float Conversion Completed
+resize completed
+Split Data Completed
+Creating Tensorflow Dataset....
+Data Pre-processing completed!
+(None, 256, 256, 30)
+(None, 128, 128, 60)
+(None, 64, 64, 90)
+(None, 32, 32, 120)
+Namespace(check=False, nogo=False, verbose=0, cpus_per_task=None, gpu=False, exp_type=None, label=None, image_size=[256, 256, 26], Nfolds=5, results_path='./results', data_path='/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl', exp_index=0, rotation=0, epochs=1000, Ntraining=3, batch_size=16, lrate=0.001, kernelSize=[3, 3, 3, 3], n_filters=[30, 60, 90, 120], pool_size=[2, 2, 2, 2, 2], padding='same', hidden=[100, 5], dropout=None, recurrent_dropout=None, spatial_dropout=None, L1_regularization=None, L2_regularization=None, activation_dense='elu', activation_convolution='elu', activation_out='softmax', min_delta=0.0, patience=10, monitor='val_loss', batch=10, prefetch=3, num_parallel_calls=4, cache=None, shuffle=100, generator_seed=42, repeat=True, steps_per_epoch=100, save_model=False)
