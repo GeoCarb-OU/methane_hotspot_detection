@@ -24,7 +24,9 @@
 2
 2
 2
---patience=100
+--patience=35
 --steps_per_epoch=100
 --epochs=1000
 --batch_size=64
+--threshold=10
+--dataset_path=/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/ 

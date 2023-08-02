@@ -43,10 +43,10 @@ def create_unet_network(
    
     x_down = []
     x_up = []
-    
+    # Add Batch Normalization
     for i in range(len(n_filters)):
         
-        x = Conv2D(n_filters[i], kernelSize[i], padding = padding, activation = activation_convolution, name = 'conv_down_{}'.format(i))(x)
+        x = Conv2D(n_filters[i], kernelSize[i], padding = padding, activation = activation_convolution, kernel_initializer = 'truncated_normal', use_bias = True, name = 'conv_down_{}'.format(i))(x)
         print(x.shape)
         x_down.append(x)
         x = MaxPooling2D(pool_size = (2,2),padding = padding,  name = 'MaxPool_down_{}'.format(i) )(x)
@@ -55,13 +55,14 @@ def create_unet_network(
     
     for i in reversed(range(len(n_filters))):
         
-        x = Conv2D(n_filters[i], kernelSize[(len(kernelSize) - (i + 1))], padding = padding, activation = activation_convolution, name = 'conv_up_{}'.format(i))(x)
+        x = Conv2D(n_filters[i], kernelSize[(len(kernelSize) - (i + 1))], padding = padding, use_bias = True,  activation = activation_convolution, name = 'conv_up_{}'.format(i))(x)
         x = UpSampling2D(size = (2,2), interpolation = 'nearest', name ='UpSampling_{}'.format(i))(x)
         x = Concatenate()([x_down[i],x])
         
     
-    x_out = Conv2D(1 , (1,1), padding = 'same', activation = 'sigmoid', name = 'output_layer')(x)
+    x_out = Conv2D(1 , (1,1), padding = 'same', use_bias = True,  activation = 'sigmoid', kernel_initializer = 'truncated_normal', name = 'output_layer')(x)
     
+    # kernel_initializer = 'zeros',
     model = Model(inputs = [inputs], outputs = [x_out])
     # optimizer
     opt = tf.keras.optimizers.Adam(learning_rate=lrate)
@@ -70,7 +71,7 @@ def create_unet_network(
     model.compile(
             optimizer=opt,
             loss='BinaryCrossentropy',
-            metrics=[tf.keras.metrics.Accuracy()]
+            metrics=[tf.keras.metrics.BinaryAccuracy()]
                         )
     
     return model

@@ -18,23 +18,26 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf 
 
 def get_data():
-    XC = []
-    EM = []
+    l = ["00", "03", "06", "09", "12", "15", "18", "21"]
+    
+    for t in l:
+        XC = []
+        EM = []
+        #for file in sorted(glob.glob('/ourdisk/hpc/geocarb/vishnupk/WRF/*_18*')):
+        for file in sorted(glob.glob('/ourdisk/hpc/geocarb/vishnupk/WRF/*_' + t + '*')):
+            print(file)
+            ds = nc.Dataset(file)
+            XC.append(ds['CH4_ANT'][0,:,:,:] + ds['CH4_BIO'][0,:,:,:] + ds['CH4_BCK'][0,:,:,:] + ds['CH4_BBU'][0,:,:,:])
+            EM.append(ds['E_CH4'][0,0,:,:]) # Simulation Only 
+            
+            lat = np.array(ds['XLAT'])
+            lon = np.array(ds['XLONG'])
+        print(len(XC))
+        df = pd.DataFrame(columns=['XC', 'EM', 'lat', 'lon'])
+        for i in range(len(XC)):
+            df = df.append({'XC': XC[i], 'EM': EM[i], 'lat': lat, 'lon': lon}, ignore_index=True)
 
-    for file in sorted(glob.glob('/ourdisk/hpc/geocarb/vishnupk/WRF/*_18*')):
-        print(file)
-        ds = nc.Dataset(file)
-        XC.append(ds['CH4_ANT'][0,:,:,:] + ds['CH4_BIO'][0,:,:,:] + ds['CH4_BCK'][0,:,:,:] + ds['CH4_BBU'][0,:,:,:])
-        EM.append(ds['E_CH4'][0,0,:,:])
-        
-        lat = np.array(ds['XLAT'])
-        lon = np.array(ds['XLONG'])
-    print(len(XC))
-    df = pd.DataFrame(columns=['XC', 'EM', 'lat', 'lon'])
-    for i in range(len(XC)):
-        df = df.append({'XC': XC[i], 'EM': EM[i], 'lat': lat, 'lon': lon}, ignore_index=True)
-
-    df.to_pickle('/ourdisk/hpc/geocarb/vishnupk/xiao_data_05_23_18.pkl')
+        df.to_pickle('/ourdisk/hpc/geocarb/vishnupk/xiao_data_' + t + '.pkl')
     
     return df
 
@@ -55,15 +58,17 @@ def read_pkl(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl
     df = pd.read_pickle(filename)
     return df
 
-def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, treshold = 15, repeat = False, save_dataset = False):
+def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, threshold = 15, repeat = False, save_dataset = False, data_path = '/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/'):
     
     
-    data_exists = check_files(dataset_path = '/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/')
+    data_exists = check_files(data_path)
+    
+    # get_data()
     
     if data_exists:
-        train_dataset = tf.data.Dataset.load('/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/train.tfrecords')
-        validation_dataset = tf.data.Dataset.load('/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/validation.tfrecords')
-        test_dataset = tf.data.Dataset.load('/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/test.tfrecords')
+        train_dataset = tf.data.Dataset.load(data_path + '/train.tfrecords')
+        validation_dataset = tf.data.Dataset.load(data_path + '/validation.tfrecords')
+        test_dataset = tf.data.Dataset.load(data_path + '/test.tfrecords')
     
     else:
         # Read data from pickle file
@@ -80,11 +85,16 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
         
         Y = Y.to_list()
         Y = np.array(Y)
-        Y = np.where(Y > treshold, 1, 0) 
+        Y = np.where(Y > threshold, 1, 0) 
         
         # # Convert to float32  
         X = X.astype('float32')
         Y = Y.astype('float32')
+        
+        # Log normalize X values
+        # X = np.log(X)
+        # Normalize data 
+        X = (X - np.min(X))/(np.max(X) - np.min(X))
         
         print('Float Conversion Completed')
         # Resize to make it 256,256 (2^x)

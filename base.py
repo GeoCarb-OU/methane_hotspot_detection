@@ -68,6 +68,8 @@ def create_parser():
     parser.add_argument('--Nfolds', type=int, default=5, help='Maximum number of folds')
     parser.add_argument('--results_path', type=str, default='./results', help='Results directory')
     parser.add_argument('--data_path', type=str, default='/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl', help='Data file path')
+    parser.add_argument('--dataset_path', type=str, default='/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/', help='Tensorflow Dataset saved file')
+    parser.add_argument('--threshold', type=float, default=15, help="Threshold for the Ground Truth")
     
     # Specific experiment configuration
     parser.add_argument('--exp_index', type=int, default=None, help='Experiment index')
@@ -320,6 +322,8 @@ def execute_exp(args=None, multi_gpus=False):
                                     batch_size=args.batch,
                                     test_size = 0.2,
                                     repeat = args.repeat,
+                                    threshold = args.threshold
+                                    data_path = args.dataset_path,
                                     )
     
     # dataset_to_numpy = list(ds_train.as_numpy_iterator())
@@ -380,6 +384,8 @@ def execute_exp(args=None, multi_gpus=False):
             return
             
     # Callbacks
+    
+    #Metrics logger 
     wandb_callback = WandbCallback( monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
                     log_weights=(False), log_gradients=(False), save_model=(True),
                     training_data=None, validation_data=None, labels=[], predictions=36,
