@@ -16,7 +16,7 @@ import pandas as pd
 import py3nvml
 import wandb
 from wandb.keras import WandbCallback
-wandb.init(project="methane", entity="vishnupk")
+wandb.init(project="MethaneHotspotDet", entity="ai2es")
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
 from tensorflow import keras
@@ -322,7 +322,7 @@ def execute_exp(args=None, multi_gpus=False):
                                     batch_size=args.batch,
                                     test_size = 0.2,
                                     repeat = args.repeat,
-                                    threshold = args.threshold
+                                    threshold = args.threshold,
                                     data_path = args.dataset_path,
                                     )
     
@@ -385,9 +385,12 @@ def execute_exp(args=None, multi_gpus=False):
             
     # Callbacks
     
-    #Metrics logger 
+    #Metrics logger (Use Logger instead) # Put it on /scratch directory to avoid permission issues
+    
+    # Create GPU utilization callback with weights and biases (WandB)
+
     wandb_callback = WandbCallback( monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
-                    log_weights=(False), log_gradients=(False), save_model=(True),
+                    log_weights=(False), log_gradients=(False), save_model=(False),
                     training_data=None, validation_data=None, labels=[], predictions=36,
                     generator=None, input_type=None, output_type=None, log_evaluation=(False),
                     validation_steps=None, class_colors=None, log_batch_frequency=None,
@@ -395,6 +398,7 @@ def execute_exp(args=None, multi_gpus=False):
                     validation_row_processor=None, prediction_row_processor=None,
                     infer_missing_processors=(True), log_evaluation_frequency=0,
                     compute_flops=(False))
+    
     early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience, restore_best_weights=True, min_delta = args.min_delta, monitor=args.monitor)
 
     # Learn

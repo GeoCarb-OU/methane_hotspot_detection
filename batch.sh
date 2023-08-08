@@ -5,7 +5,7 @@
 #SBATCH --mem=15000
 #SBATCH --output=results/unet/unet_%j_stdout.txt
 #SBATCH --error=results/unet/unet_%j_stderr.txt
-#SBATCH --time=05:00:00
+#SBATCH --time=24:00:00
 #SBATCH --job-name=unet_deep
 #SBATCH --mail-user=vishnupk@ou.edu
 #SBATCH --mail-type=ALL

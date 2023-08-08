@@ -1,4 +1,0 @@
-name: tf
-channels:
-  - defaults
-prefix: /home/vishnupk/miniconda3/envs/tf
