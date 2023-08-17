@@ -15,8 +15,7 @@ import pickle
 import pandas as pd
 import py3nvml
 import wandb
-from wandb.keras import WandbCallback
-wandb.init(project="MethaneHotspotDet", entity="ai2es")
+from wandb.keras import WandbCallback, WandbMetricsLogger
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
 from tensorflow import keras
@@ -399,6 +398,8 @@ def execute_exp(args=None, multi_gpus=False):
                     infer_missing_processors=(True), log_evaluation_frequency=0,
                     compute_flops=(False))
     
+    # logger = WandbMetricsLogger()
+    
     early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience, restore_best_weights=True, min_delta = args.min_delta, monitor=args.monitor)
 
     # Learn
@@ -411,7 +412,7 @@ def execute_exp(args=None, multi_gpus=False):
                         use_multiprocessing=True, 
                         verbose=args.verbose>=2,
                         validation_data=ds_valid,
-                        callbacks=[early_stopping_cb, wandb_callback])
+                        callbacks=[early_stopping_cb, WandbMetricsLogger()])
 
 
     # Save model
@@ -498,6 +499,12 @@ if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
     check_args(args)
+    
+    # WandB initialization
+    wandb.init(project="MethaneHotspotDet", entity="ai2es", config=args, name="unet_deep", reinit=False)
+
+    
+    
     
     # Turn off GPU?
     if not args.gpu:
