@@ -4,7 +4,7 @@ GeoCarb Methane Emisison Estimation with UNET
 Author: Andrew H. Fagg (andrewhfagg@gmail.com)
 Editor: Vishnu Kadiyala (vishnupk@ou.edu) 
 
-Estimation problem on the GeoCarb WRF data. 
+Methane hotspot emission Estimation problem on the GeoCarb WRF data. 
 
 '''
 
@@ -13,9 +13,9 @@ import os
 import argparse
 import pickle
 import pandas as pd
-import py3nvml
+# import py3nvml
 import wandb
-from wandb.keras import WandbCallback, WandbMetricsLogger
+from wandb import WandbCallback, WandbMetricsLogger
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
 from tensorflow import keras
@@ -53,6 +53,7 @@ def create_parser():
     parser.add_argument('--check', action='store_true', help='Check results for completeness')
     parser.add_argument('--nogo', action='store_true', help='Do not perform the experiment')
     parser.add_argument('--verbose', '-v', action='count', default=0, help="Verbosity level")
+    parser.add_argument('--job_id', type = int , default = 000000, help= "Gets the JOB ID from slurm")
 
     # CPU/GPU
     parser.add_argument('--cpus_per_task', type=int, default=None, help="Number of threads to consume")
@@ -501,7 +502,7 @@ if __name__ == "__main__":
     check_args(args)
     
     # WandB initialization
-    wandb.init(project="MethaneHotspotDet", entity="ai2es", config=args, name="unet_deep", reinit=False)
+    wandb.init(project="MethaneHotspotDet", entity="ai2es", config=args, name="unet_deep_"+str(job_id), reinit=False)
 
     
     

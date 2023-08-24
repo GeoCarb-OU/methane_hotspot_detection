@@ -165,6 +165,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     
     # Shuffle Dataset and batch it
     train_dataset = train_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
+    train_dataset = train_dataset.prefetch(buffer_size=1024)
     validation_dataset = validation_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
     test_dataset = test_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
     
