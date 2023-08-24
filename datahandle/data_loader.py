@@ -58,7 +58,7 @@ def read_pkl(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl
     df = pd.read_pickle(filename)
     return df
 
-def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, threshold = 15, repeat = False, save_dataset = False, data_path = '/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/'):
+def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, threshold = 15, repeat = False, save_dataset = False, data_path = '/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/', testing = False):
     
     
     data_exists = check_files(data_path)
@@ -158,23 +158,23 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
         
         
         # save TF records after splitting
-        train_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/train.tfrecords")
-        validation_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/validation.tfrecords")
-        test_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/test.tfrecords")  
+        train_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/"+ str(threshold) + "_train.tfrecords")
+        validation_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/" + str(threshold) + "_validation.tfrecords")
+        test_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/" + str(threshold) + "_test.tfrecords")  
     
-    
-    # Shuffle Dataset and batch it
-    train_dataset = train_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
-    train_dataset = train_dataset.prefetch(buffer_size=1024)
-    validation_dataset = validation_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
-    test_dataset = test_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
-    
-    #Repeat the dataset if needed
-    if repeat:
-        train_dataset = train_dataset.repeat()
+    if not testing:
+        # Shuffle Dataset and batch it
+        train_dataset = train_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
+        train_dataset = train_dataset.prefetch(buffer_size=1024)
+        validation_dataset = validation_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
+        test_dataset = test_dataset.shuffle(buffer_size = buffer_size).batch(batch_size)
+        
+        #Repeat the dataset if needed
+        if repeat:
+            train_dataset = train_dataset.repeat()
 
-    # train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
-    # validation_dataset = validation_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
-    # test_dataset = test_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
-    
-    return train_dataset, validation_dataset, test_dataset 
+        # train_dataset = train_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+        # validation_dataset = validation_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+        # test_dataset = test_dataset.map(lambda x, y: tf.expand_dims(x, -1), y)
+        
+        return train_dataset, validation_dataset, test_dataset 
