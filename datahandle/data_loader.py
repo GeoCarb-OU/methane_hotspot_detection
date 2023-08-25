@@ -62,6 +62,7 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
     
     
     data_exists = check_files(data_path)
+    print(data_exists)
     
     # get_data()
     
@@ -158,9 +159,9 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
         
         
         # save TF records after splitting
-        train_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/"+ str(threshold) + "_train.tfrecords")
-        validation_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/" + str(threshold) + "_validation.tfrecords")
-        test_dataset.save("/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/" + str(threshold) + "_test.tfrecords")  
+        train_dataset.save(data_path + "_train.tfrecords")
+        validation_dataset.save(data_path + "_validation.tfrecords")
+        test_dataset.save(data_path + "_test.tfrecords")  
     
     if not testing:
         # Shuffle Dataset and batch it
