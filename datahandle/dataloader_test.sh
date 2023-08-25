@@ -2,14 +2,14 @@
 #SBATCH --partition=geocarb
 #SBATCH --cpus-per-task=10
 # memory in MB
-#SBATCH --mem=50000
-#SBATCH --output=results/unet/datatest_%j_stdout.txt
-#SBATCH --error=results/unet/datatest_%j_stderr.txt
+#SBATCH --mem=16000
+#SBATCH --output=results/test/datatest_%j_stdout.txt
+#SBATCH --error=results/test/datatest_%j_stderr.txt
 #SBATCH --time=24:00:00
 #SBATCH --job-name=testloader
 #SBATCH --mail-user=vishnupk@ou.edu
 #SBATCH --mail-type=ALL
-#SBATCH --chdir=/home/vishnupk/geocarb/methane_hotspot_detection
+#SBATCH --chdir=/home/vishnupk/geocarb/methane_hotspot_detection/datahandle
 ##SBATCH --array=0
 #
 #################################################
@@ -19,4 +19,4 @@
 conda activate tf
 
 # 2023
-python check_dataloader.py
+python check_data_loader.py
