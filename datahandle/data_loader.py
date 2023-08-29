@@ -60,16 +60,16 @@ def read_pkl(filename = '/ourdisk/hpc/geocarb/vishnupk/folds/xiao_data_12_v1.pkl
 
 def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size = 8, buffer_size = 1024, threshold = 15, repeat = False, save_dataset = False, data_path = '/ourdisk/hpc/geocarb/vishnupk/datasets/methane/12/', testing = False):
     
-    
+    data_path = data_path +'/'+ str(threshold) + '_'
     data_exists = check_files(data_path)
     print(data_exists)
     
     # get_data()
     
     if data_exists:
-        train_dataset = tf.data.Dataset.load(data_path + '/train.tfrecords')
-        validation_dataset = tf.data.Dataset.load(data_path + '/validation.tfrecords')
-        test_dataset = tf.data.Dataset.load(data_path + '/test.tfrecords')
+        train_dataset = tf.data.Dataset.load(data_path + 'train.tfrecords')
+        validation_dataset = tf.data.Dataset.load(data_path + 'validation.tfrecords')
+        test_dataset = tf.data.Dataset.load(data_path + 'test.tfrecords')
     
     else:
         # Read data from pickle file
@@ -159,9 +159,9 @@ def data_loader(filename = None, test_size = 0.2, random_state = 42, batch_size 
         
         
         # save TF records after splitting
-        train_dataset.save(data_path + "_train.tfrecords")
-        validation_dataset.save(data_path + "_validation.tfrecords")
-        test_dataset.save(data_path + "_test.tfrecords")  
+        train_dataset.save(data_path + 'train.tfrecords')
+        validation_dataset.save(data_path + 'validation.tfrecords')
+        test_dataset.save(data_path + 'test.tfrecords')  
     
     if not testing:
         # Shuffle Dataset and batch it
