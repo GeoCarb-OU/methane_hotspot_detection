@@ -2,19 +2,19 @@
 import numpy as np
 import pandas as pd
 import glob 
-import netCDF4 as nc
+# import netCDF4 as nc
 import time
 import numpy as np
 import glob
 import matplotlib.pyplot as plt
-from tqdm import trange
+# from tqdm import trange
 from math import exp
 from scipy import ndimage
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 from random import randint
 import random
 import os 
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
 import tensorflow as tf 
 
 def get_data():

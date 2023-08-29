@@ -15,7 +15,7 @@ import pickle
 import pandas as pd
 # import py3nvml
 import wandb
-from wandb import WandbCallback, WandbMetricsLogger
+# from wandb.keras import WandbMetricsLogger
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
 from tensorflow import keras
@@ -132,7 +132,7 @@ def exp_type_to_hyperparameters(args):
     '''
     if args.exp_type is None:
         # ADD MORE ARGUMENTS TO TEST DIFFERENT CONFIG OPTIONS
-        p = {'rotation': range(1)}
+        p = {'threshold': [8,10,12,15,18,25,30],}
     else:
         assert False, "Unrecognized exp_type"
 
@@ -244,7 +244,8 @@ def generate_fname(args, params_str):
     lrate_str = "LR_%0.6f_"%args.lrate
     
     # Put it all together, including #of training folds and the experiment rotation
-    return "%s/image_%s%s_Cfilters_%s_Pool_%s_Pad_%s_hidden_%s_%s%s%s%sntrain_%02d_rot_%02d"%(args.results_path,
+    return "%d_%s/image_%s%s_Cfilters_%s_Pool_%s_Pad_%s_hidden_%s_%s%s%s%sntrain_%02d_rot_%02d_%d"%(args.threshold,
+                                                                                           args.results_path,
                                                                                            experiment_type_str,
                                                                                            label_str,
                                                                                            #conv_size_str,
@@ -258,7 +259,9 @@ def generate_fname(args, params_str):
                                                                                            regularizer_l2_str,
                                                                                            lrate_str,
                                                                                            args.Ntraining,
-                                                                                           args.rotation)
+                                                                                           args.rotation,
+                                                                                           args.job_id
+                                                                                           )
 
 #################################################################
 
@@ -308,6 +311,11 @@ def execute_exp(args=None, multi_gpus=False):
         
     print(args.exp_index)
     
+    # WandB initialization
+    wandb.init(project="MethaneHotspotDet", entity="ai2es", config=args, name="unet_deep_"+str(args.job_id), reinit=False)
+
+    
+    
     # Override arguments if we are using exp_index
     args_str = augment_args(args)
 
@@ -324,6 +332,7 @@ def execute_exp(args=None, multi_gpus=False):
                                     repeat = args.repeat,
                                     threshold = args.threshold,
                                     data_path = args.dataset_path,
+                                    
                                     )
     
     # dataset_to_numpy = list(ds_train.as_numpy_iterator())
@@ -389,15 +398,15 @@ def execute_exp(args=None, multi_gpus=False):
     
     # Create GPU utilization callback with weights and biases (WandB)
 
-    wandb_callback = WandbCallback( monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
-                    log_weights=(False), log_gradients=(False), save_model=(False),
-                    training_data=None, validation_data=None, labels=[], predictions=36,
-                    generator=None, input_type=None, output_type=None, log_evaluation=(False),
-                    validation_steps=None, class_colors=None, log_batch_frequency=None,
-                    log_best_prefix="best_", save_graph=(True), validation_indexes=None,
-                    validation_row_processor=None, prediction_row_processor=None,
-                    infer_missing_processors=(True), log_evaluation_frequency=0,
-                    compute_flops=(False))
+    # wandb_callback = WandbCallback( monitor="val_loss", verbose=0, mode="auto", save_weights_only=(False),
+    #                 log_weights=(False), log_gradients=(False), save_model=(False),
+    #                 training_data=None, validation_data=None, labels=[], predictions=36,
+    #                 generator=None, input_type=None, output_type=None, log_evaluation=(False),
+    #                 validation_steps=None, class_colors=None, log_batch_frequency=None,
+    #                 log_best_prefix="best_", save_graph=(True), validation_indexes=None,
+    #                 validation_row_processor=None, prediction_row_processor=None,
+    #                 infer_missing_processors=(True), log_evaluation_frequency=0,
+    #                 compute_flops=(False))
     
     # logger = WandbMetricsLogger()
     
@@ -413,7 +422,7 @@ def execute_exp(args=None, multi_gpus=False):
                         use_multiprocessing=True, 
                         verbose=args.verbose>=2,
                         validation_data=ds_valid,
-                        callbacks=[early_stopping_cb, WandbMetricsLogger()])
+                        callbacks=[early_stopping_cb])
 
 
     # Save model
@@ -445,10 +454,6 @@ def execute_exp(args=None, multi_gpus=False):
     
     
     del results, model, history, ds_train, ds_valid, ds_test
-    
-    args.exp_index += 1
-    if args.exp_index < 5:
-        execute_exp(args)
     
     return None
 
@@ -500,11 +505,6 @@ if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
     check_args(args)
-    
-    # WandB initialization
-    wandb.init(project="MethaneHotspotDet", entity="ai2es", config=args, name="unet_deep_"+str(job_id), reinit=False)
-
-    
     
     
     # Turn off GPU?
